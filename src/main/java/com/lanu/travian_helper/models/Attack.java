@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -13,9 +13,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Attack {
 
+    private String heroName;
     private String attackingVillage;
+    private  String attackedVillage;
     private int attackingVillageX;
     private int attackingVillageY;
-    private LocalDateTime duration;
-    private LocalDateTime arivedTime;
+    private int attackedVillageX;
+    private int attackedVillageY;
+    private LocalTime duration;
+    private LocalTime arrivedTime;
 }

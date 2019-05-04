@@ -13,7 +13,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class Attack {
 
-    private String heroName;
+    private String accountName;
     private String attackingVillage;
     private  String attackedVillage;
     private int attackingVillageX;

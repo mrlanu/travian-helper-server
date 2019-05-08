@@ -3,6 +3,7 @@ package com.lanu.travian_helper.services;
 import com.lanu.travian_helper.models.Attack;
 import com.lanu.travian_helper.models.AttacksString;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -12,6 +13,9 @@ import java.util.List;
 
 @Service
 public class ParsingServiceImpl implements ParsingService {
+
+    @Autowired
+    private BrowsingService browsingService;
 
     @AllArgsConstructor
     private class Coordinates{
@@ -30,7 +34,10 @@ public class ParsingServiceImpl implements ParsingService {
         init(attacksString);
 
         for (int i = 0; i < allAttacks.size(); i+=4){
-            result.add(new Attack(getHeroName(),
+            result.add(new Attack(
+                    getHeroName(),
+                    null,
+                    null,
                     getAttackingVillageName(i),
                     getAttackedVillageName(),
                     getCoordinatesAttackingVillage(i).x,
@@ -41,7 +48,7 @@ public class ParsingServiceImpl implements ParsingService {
                     getAttackTime(i)));
         }
 
-        return result;
+        return browsingService.injectAttackingAccountName(result);
     }
 
     private void init(AttacksString attacksString){

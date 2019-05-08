@@ -13,7 +13,9 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class Attack {
 
-    private String accountName;
+    private String attackedAccountName;
+    private String attackingAccName;
+    private String attackingAllianceName;
     private String attackingVillage;
     private  String attackedVillage;
     private int attackingVillageX;

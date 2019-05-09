@@ -74,21 +74,22 @@ public class BrowsingServiceImpl implements BrowsingService {
     }
 
     public List<Attack> injectAttackingAccountName(List<Attack> attacks){
+
         HtmlPage detailPage = null;
+
         if (currentPage == null){
             login( "Баба Яга", "28333555");
         }
+
         for (Attack attack : attacks){
             try {
               detailPage = webClient.getPage(String.format("https://ts4.travian.ru/position_details.php?x=%d&y=%d", attack.getAttackingVillageX(), attack.getAttackingVillageY()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            HtmlTable villageInfoTable = detailPage.getHtmlElementById("village_info");
-            List<HtmlAnchor> anchors = villageInfoTable.getRows().get(2).getByXPath("td/a");
-            attack.setAttackingAccName(anchors.get(0).asText());
-            anchors = villageInfoTable.getRows().get(1).getByXPath("td/a");
-            attack.setAttackingAllianceName(anchors.get(0).asText());
+            List<HtmlAnchor> villageInfoTableAnchors = detailPage.getByXPath("//table[@id='village_info']//a");
+            attack.setAttackingAccName(villageInfoTableAnchors.get(1).asText());
+            attack.setAttackingAllianceName(villageInfoTableAnchors.get(0).asText());
         }
         return attacks;
     }

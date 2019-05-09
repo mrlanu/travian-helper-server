@@ -15,6 +15,7 @@ public class Attack {
 
     private String attackedAccountName;
     private String attackingAccName;
+    private int attackingAccId;
     private String attackingAllianceName;
     private String attackingVillage;
     private  String attackedVillage;

@@ -89,6 +89,7 @@ public class BrowsingServiceImpl implements BrowsingService {
             }
             List<HtmlAnchor> villageInfoTableAnchors = detailPage.getByXPath("//table[@id='village_info']//a");
             attack.setAttackingAccName(villageInfoTableAnchors.get(1).asText());
+            attack.setAttackingAccId(Integer.parseInt(villageInfoTableAnchors.get(1).getAttribute("href").split("=")[1]));
             attack.setAttackingAllianceName(villageInfoTableAnchors.get(0).asText());
         }
         return attacks;

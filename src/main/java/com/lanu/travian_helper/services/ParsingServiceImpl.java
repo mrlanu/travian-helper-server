@@ -37,6 +37,7 @@ public class ParsingServiceImpl implements ParsingService {
             result.add(new Attack(
                     getHeroName(),
                     null,
+                    0,
                     null,
                     getAttackingVillageName(i),
                     getAttackedVillageName(),
@@ -67,7 +68,7 @@ public class ParsingServiceImpl implements ParsingService {
             if (s.contains("Прибывающие войска")) {
 
                 s = s.substring(20);
-                int resInt = Integer.parseInt(s.substring(0,1));
+                int resInt = Integer.parseInt(s.split("\\)")[0]);
 
                 for (int j = i + 1; j < i + 1 + resInt * 4; j+=4){
 

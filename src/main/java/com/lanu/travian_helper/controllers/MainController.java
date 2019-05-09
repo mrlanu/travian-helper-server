@@ -33,8 +33,13 @@ public class MainController {
         return browsingService.getAllPlayers();
     }
 
-    @PostMapping("/attacks")
+    @PostMapping("/parse-attacks")
     public List<Attack> getAllAttacks(@Valid @RequestBody AttacksString stringAttacksForParse){
         return parsingService.getAllAttacks(stringAttacksForParse);
+    }
+
+    @PostMapping("/attacks")
+    public void saveAttacks(@RequestBody List<Attack> attackList){
+        System.out.println("done");
     }
 }

@@ -16,13 +16,17 @@ public class Attack {
     private String attackedAccountName;
     private String attackingAccName;
     private int attackingAccId;
+    private int attackingVillageId;
     private String attackingAllianceName;
     private String attackingVillage;
     private  String attackedVillage;
     private int attackingVillageX;
     private int attackingVillageY;
+    private int attackedVillageId;
     private int attackedVillageX;
     private int attackedVillageY;
     private LocalTime duration;
     private LocalTime arrivedTime;
+
+
 }

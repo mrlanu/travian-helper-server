@@ -82,6 +82,8 @@ public class BrowsingServiceImpl implements BrowsingService {
         }
 
         for (Attack attack : attacks){
+
+            // detail of attacking village
             try {
               detailPage = webClient.getPage(String.format("https://ts4.travian.ru/position_details.php?x=%d&y=%d", attack.getAttackingVillageX(), attack.getAttackingVillageY()));
             } catch (IOException e) {
@@ -91,8 +93,25 @@ public class BrowsingServiceImpl implements BrowsingService {
             attack.setAttackingAccName(villageInfoTableAnchors.get(1).asText());
             attack.setAttackingAccId(Integer.parseInt(villageInfoTableAnchors.get(1).getAttribute("href").split("=")[1]));
             attack.setAttackingAllianceName(villageInfoTableAnchors.get(0).asText());
+            attack.setAttackingVillageId(getVillageId(detailPage));
+
+            // detail of attacked village
+            try {
+                detailPage = webClient.getPage(String.format("https://ts4.travian.ru/position_details.php?x=%d&y=%d", attack.getAttackedVillageX(), attack.getAttackedVillageY()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            attack.setAttackedVillageId(getVillageId(detailPage));
         }
+
+        webClient.close();
+
         return attacks;
+    }
+
+    private int getVillageId(HtmlPage page){
+        HtmlAnchor anchorForVillageId = (HtmlAnchor) page.getByXPath("//div[@class='detailImage  ']//a").get(1);
+        return Integer.parseInt(anchorForVillageId.getAttribute("href").split("=")[3]);
     }
 
     private void login(String user, String password){

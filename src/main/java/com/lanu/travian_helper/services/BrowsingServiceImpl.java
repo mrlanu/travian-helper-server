@@ -83,25 +83,28 @@ public class BrowsingServiceImpl implements BrowsingService {
 
         for (Attack attack : attacks){
 
-            // detail of attacking village
+            // inject details of attacking village
             try {
-              detailPage = webClient.getPage(String.format("https://ts4.travian.ru/position_details.php?x=%d&y=%d", attack.getAttackingVillageX(), attack.getAttackingVillageY()));
+              detailPage = webClient.getPage(String.format("https://ts4.travian.ru/position_details.php?x=%d&y=%d", attack.getOffer().getX(), attack.getOffer().getY()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
             List<HtmlAnchor> villageInfoTableAnchors = detailPage.getByXPath("//table[@id='village_info']//a");
-            attack.setAttackingAccName(villageInfoTableAnchors.get(1).asText());
-            attack.setAttackingAccId(Integer.parseInt(villageInfoTableAnchors.get(1).getAttribute("href").split("=")[1]));
-            attack.setAttackingAllianceName(villageInfoTableAnchors.get(0).asText());
-            attack.setAttackingVillageId(getVillageId(detailPage));
+            attack.getOffer().getPlayer().setName(villageInfoTableAnchors.get(1).asText());
+            attack.getOffer().getPlayer().setId(Integer.parseInt(villageInfoTableAnchors.get(1).getAttribute("href").split("=")[1]));
+            attack.getOffer().getPlayer().setAlliance(villageInfoTableAnchors.get(0).asText());
+            attack.getOffer().setId(getVillageId(detailPage));
 
-            // detail of attacked village
+            // inject details of attacked village
             try {
-                detailPage = webClient.getPage(String.format("https://ts4.travian.ru/position_details.php?x=%d&y=%d", attack.getAttackedVillageX(), attack.getAttackedVillageY()));
+                detailPage = webClient.getPage(String.format("https://ts4.travian.ru/position_details.php?x=%d&y=%d", attack.getDeffer().getX(), attack.getDeffer().getY()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            attack.setAttackedVillageId(getVillageId(detailPage));
+            villageInfoTableAnchors = detailPage.getByXPath("//table[@id='village_info']//a");
+            attack.getDeffer().getPlayer().setId(Integer.parseInt(villageInfoTableAnchors.get(1).getAttribute("href").split("=")[1]));
+            attack.getDeffer().getPlayer().setAlliance(villageInfoTableAnchors.get(0).asText());
+            attack.getDeffer().setId(getVillageId(detailPage));
         }
 
         webClient.close();

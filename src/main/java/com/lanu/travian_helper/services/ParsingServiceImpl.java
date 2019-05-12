@@ -2,6 +2,8 @@ package com.lanu.travian_helper.services;
 
 import com.lanu.travian_helper.models.Attack;
 import com.lanu.travian_helper.models.AttacksString;
+import com.lanu.travian_helper.models.Player;
+import com.lanu.travian_helper.models.Village;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,20 +37,19 @@ public class ParsingServiceImpl implements ParsingService {
 
         for (int i = 0; i < allAttacks.size(); i+=4){
             result.add(new Attack(
-                    getHeroName(),
-                    null,
-                    0,
-                    0,
-                    null,
-                    getAttackingVillageName(i),
-                    getAttackedVillageName(),
-                    getCoordinatesAttackingVillage(i).x,
-                    getCoordinatesAttackingVillage(i).y,
-                    0,
-                    getCoordinatesAttackedVillage(getAttackedVillageName()).x,
-                    getCoordinatesAttackedVillage(getAttackedVillageName()).y,
-                    getAttackDuration(i),
-                    getAttackTime(i)));
+                                // Offer
+                                new Village(0,
+                                    getAttackingVillageName(i),
+                                    getCoordinatesAttackingVillage(i).x,
+                                    getCoordinatesAttackingVillage(i).y,
+                                    new Player(0, getPlayerName(), null)),
+                                // Deffer
+                                new Village(0,
+                                        getAttackedVillageName(),
+                                        getCoordinatesAttackedVillage(getAttackedVillageName()).x,
+                                        getCoordinatesAttackedVillage(getAttackedVillageName()).y,
+                                        new Player(0, getPlayerName(), null)),
+                                getAttackTime(i)));
         }
 
         return browsingService.injectAttackingAccountName(result);
@@ -86,7 +87,7 @@ public class ParsingServiceImpl implements ParsingService {
         }
     }
 
-    private String getHeroName(){
+    private String getPlayerName(){
         String hero = "";
 
         for (int i = 0; i < stringsList.size() - 1; i++){

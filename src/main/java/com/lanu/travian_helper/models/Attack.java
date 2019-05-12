@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalTime;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -13,20 +14,22 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class Attack {
 
-    private String attackedAccountName;
-    private String attackingAccName;
-    private int attackingAccId;
-    private int attackingVillageId;
-    private String attackingAllianceName;
-    private String attackingVillage;
-    private  String attackedVillage;
-    private int attackingVillageX;
-    private int attackingVillageY;
-    private int attackedVillageId;
-    private int attackedVillageX;
-    private int attackedVillageY;
-    private LocalTime duration;
-    private LocalTime arrivedTime;
+    private Village offer;
+    private Village deffer;
+    private LocalTime time;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Attack attack = (Attack) o;
+        return Objects.equals(offer.getName(), attack.offer.getName()) &&
+                Objects.equals(deffer.getName(), attack.deffer.getName()) &&
+                Objects.equals(time, attack.time);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(offer, deffer, time);
+    }
 }

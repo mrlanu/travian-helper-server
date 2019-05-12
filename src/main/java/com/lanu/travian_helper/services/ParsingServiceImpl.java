@@ -37,6 +37,7 @@ public class ParsingServiceImpl implements ParsingService {
 
         for (int i = 0; i < allAttacks.size(); i+=4){
             result.add(new Attack(
+                                null,
                                 // Offer
                                 new Village(0,
                                     getAttackingVillageName(i),

@@ -3,6 +3,7 @@ package com.lanu.travian_helper.controllers;
 import com.lanu.travian_helper.entities.Player;
 import com.lanu.travian_helper.models.Attack;
 import com.lanu.travian_helper.models.AttacksString;
+import com.lanu.travian_helper.services.AttackService;
 import com.lanu.travian_helper.services.BrowsingService;
 import com.lanu.travian_helper.services.ParsingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class MainController {
     @Autowired
     private BrowsingService browsingService;
 
+    @Autowired
+    private AttackService attackService;
+
     @GetMapping
     public String getGreeting(){
         return "Hello";
@@ -39,7 +43,7 @@ public class MainController {
     }
 
     @PostMapping("/attacks")
-    public void saveAttacks(@RequestBody List<Attack> attackList){
-        System.out.println("done");
+    public List<Attack> saveAttacks(@RequestBody List<Attack> attackList){
+        return attackService.saveAll(attackList);
     }
 }

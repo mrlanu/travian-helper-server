@@ -16,7 +16,7 @@ import javax.persistence.Id;
 public class Player {
 
     @Id
-    private int id;
+    private Integer id;
     private String name;
     private String alliance;
 }

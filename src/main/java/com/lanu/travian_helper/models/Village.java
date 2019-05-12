@@ -17,7 +17,7 @@ import javax.persistence.OneToOne;
 public class Village {
 
     @Id
-    private int id;
+    private Integer id;
     private String name;
     private int x;
     private int y;

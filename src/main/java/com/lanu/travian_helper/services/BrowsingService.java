@@ -1,11 +1,11 @@
 package com.lanu.travian_helper.services;
 
-import com.lanu.travian_helper.entities.Player;
-import com.lanu.travian_helper.models.Attack;
+import com.lanu.travian_helper.entities.Account;
+import com.lanu.travian_helper.entities.Attack;
 
 import java.util.List;
 
 public interface BrowsingService {
-    List<Player> getAllPlayers();
+    List<Account> getAllPlayers();
     List<Attack> injectAttackingAccountName(List<Attack> attacks);
 }

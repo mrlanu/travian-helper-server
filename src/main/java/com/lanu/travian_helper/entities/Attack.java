@@ -1,4 +1,4 @@
-package com.lanu.travian_helper.models;
+package com.lanu.travian_helper.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +27,8 @@ public class Attack {
     private Village deffer;
 
     private LocalTime time;
+
+    private Integer userId;
 
     @Override
     public boolean equals(Object o) {

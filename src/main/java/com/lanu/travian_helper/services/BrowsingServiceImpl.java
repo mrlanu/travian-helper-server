@@ -2,8 +2,8 @@ package com.lanu.travian_helper.services;
 
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
-import com.lanu.travian_helper.entities.Player;
-import com.lanu.travian_helper.models.Attack;
+import com.lanu.travian_helper.entities.Account;
+import com.lanu.travian_helper.entities.Attack;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +20,9 @@ public class BrowsingServiceImpl implements BrowsingService {
     HtmlPage currentPage;
 
     @Override
-    public List<Player> getAllPlayers() {
+    public List<Account> getAllPlayers() {
 
-        List<Player> playerList = new ArrayList<>();
+        List<Account> accountList = new ArrayList<>();
 
         try {
             login( "Баба Яга", "28333555");
@@ -47,9 +47,9 @@ public class BrowsingServiceImpl implements BrowsingService {
                     List<HtmlTableCell> cellList = tableRows.get(i).getCells();
                     //select all a 0 - player 1 - alliance
                     List<HtmlAnchor> anchors = tableRows.get(i).getByXPath("td/a");
-                    playerList.add(new Player(
+                    accountList.add(new Account(
                             Integer.parseInt(anchors.get(0).getAttribute("href").split("=")[1]),
-                            playerList.size()+1,
+                            accountList.size()+1,
                             cellList.get(1).asText(),
                             cellList.get(2).asText(),
                             Integer.parseInt(cellList.get(3).asText()),
@@ -61,7 +61,7 @@ public class BrowsingServiceImpl implements BrowsingService {
                 tableRows = table.getRows();
             }
 
-            for (Player p : playerList){
+            for (Account p : accountList){
                 System.out.println(p);
             }
 
@@ -70,7 +70,7 @@ public class BrowsingServiceImpl implements BrowsingService {
             e.printStackTrace();
         }
 
-        return playerList;
+        return accountList;
     }
 
     public List<Attack> injectAttackingAccountName(List<Attack> attacks){

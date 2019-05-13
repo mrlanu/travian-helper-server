@@ -1,17 +1,22 @@
 package com.lanu.travian_helper.entities;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class Player {
-    private int id;
-    private int ratio;
+
+    @Id
+    private Integer id;
     private String name;
     private String alliance;
-    private int population;
-    private int villages;
 }

@@ -1,9 +1,9 @@
 package com.lanu.travian_helper.services;
 
-import com.lanu.travian_helper.models.Attack;
+import com.lanu.travian_helper.entities.Attack;
 import com.lanu.travian_helper.models.AttacksString;
-import com.lanu.travian_helper.models.Player;
-import com.lanu.travian_helper.models.Village;
+import com.lanu.travian_helper.entities.Player;
+import com.lanu.travian_helper.entities.Village;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,7 +50,7 @@ public class ParsingServiceImpl implements ParsingService {
                                         getCoordinatesAttackedVillage(getAttackedVillageName()).x,
                                         getCoordinatesAttackedVillage(getAttackedVillageName()).y,
                                         new Player(0, getPlayerName(), null)),
-                                getAttackTime(i)));
+                                getAttackTime(i), 1));
         }
 
         return browsingService.injectAttackingAccountName(result);

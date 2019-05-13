@@ -1,7 +1,7 @@
 package com.lanu.travian_helper.controllers;
 
-import com.lanu.travian_helper.entities.Player;
-import com.lanu.travian_helper.models.Attack;
+import com.lanu.travian_helper.entities.Account;
+import com.lanu.travian_helper.entities.Attack;
 import com.lanu.travian_helper.models.AttacksString;
 import com.lanu.travian_helper.services.AttackService;
 import com.lanu.travian_helper.services.BrowsingService;
@@ -33,7 +33,7 @@ public class MainController {
     }
 
     @GetMapping("/players")
-    public List<Player> getAll(){
+    public List<Account> getAll(){
         return browsingService.getAllPlayers();
     }
 

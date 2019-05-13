@@ -1,4 +1,4 @@
-package com.lanu.travian_helper.models;
+package com.lanu.travian_helper.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,16 +7,21 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Player {
+public class Village {
 
     @Id
     private Integer id;
     private String name;
-    private String alliance;
+    private int x;
+    private int y;
+
+    @OneToOne
+    private Player player;
 }

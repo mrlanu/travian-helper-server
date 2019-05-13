@@ -1,12 +1,13 @@
 package com.lanu.travian_helper.services;
 
-import com.lanu.travian_helper.models.Attack;
+import com.lanu.travian_helper.entities.Attack;
 import com.lanu.travian_helper.repositories.AttackRepository;
 import com.lanu.travian_helper.repositories.PlayerRepository;
 import com.lanu.travian_helper.repositories.VillageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,8 +24,9 @@ public class AttackServiceImpl implements AttackService {
     private PlayerRepository playerRepository;
 
     @Override
-    public List<Attack> saveAll(List<Attack> attackList){
-        return attackList
+    public List<Attack> saveAll(List<Attack> requestedAttacksList){
+
+        return checkIfAttackIsStored(requestedAttacksList)
                 .stream()
                 .peek(attack -> {
                     playerRepository.save(attack.getDeffer().getPlayer());
@@ -32,6 +34,33 @@ public class AttackServiceImpl implements AttackService {
                     villageRepository.save(attack.getOffer());
                     villageRepository.save(attack.getDeffer());
                     attackRepository.save(attack);
-                }).collect(Collectors.toList());
+                })
+                .collect(Collectors.toList());
+    }
+
+    // checking whether is attack stored already or not
+    private List<Attack> checkIfAttackIsStored(List<Attack> requestedAttacksList){
+
+        // if attack has been stored already, it going to be skipped
+        boolean isExist = false;
+
+        List<Attack> result = new ArrayList<>();
+        List<Attack> storedAttackList = attackRepository.findAllByUserId(1);
+
+        if (storedAttackList.size() > 0){
+            for (Attack attack : requestedAttacksList){
+                for (Attack attack1 : storedAttackList){
+                    if (attack.equals(attack1)){
+                        isExist = true;
+                    }
+                }
+                if (!isExist){
+                    result.add(attack);
+                }
+                isExist = false;
+            }
+        } else result.addAll(requestedAttacksList);
+
+        return result;
     }
 }

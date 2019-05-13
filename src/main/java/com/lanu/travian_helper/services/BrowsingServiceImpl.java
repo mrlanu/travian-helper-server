@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -136,5 +137,24 @@ public class BrowsingServiceImpl implements BrowsingService {
         } catch (IOException e) {
             System.out.println("Error");
         }
+    }
+
+    public LocalTime getServerTime(){
+        if (currentPage == null){
+            login( "Баба Яга", "28333555");
+        }else {
+            try {
+                currentPage = (HtmlPage) currentPage.refresh();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        List<HtmlElement> test = currentPage.getByXPath("//span[@class='timer']");
+        String[] time = test.get(1).getTextContent().split(":");
+        return LocalTime.of(
+                Integer.parseInt(time[0]),
+                Integer.parseInt(time[1]),
+                Integer.parseInt(time[2]));
     }
 }

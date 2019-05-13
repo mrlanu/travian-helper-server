@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -26,6 +27,11 @@ public class MainController {
 
     @Autowired
     private AttackService attackService;
+
+    @GetMapping("/time")
+    public LocalTime getServerTime(){
+        return browsingService.getServerTime();
+    }
 
     @GetMapping
     public String getGreeting(){

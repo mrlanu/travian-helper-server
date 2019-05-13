@@ -1,14 +1,17 @@
 package com.lanu.travian_helper.services;
 
 import com.lanu.travian_helper.entities.Attack;
-import com.lanu.travian_helper.models.AttacksString;
 import com.lanu.travian_helper.entities.Player;
 import com.lanu.travian_helper.entities.Village;
+import com.lanu.travian_helper.models.AttacksString;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +30,7 @@ public class ParsingServiceImpl implements ParsingService {
 
     private List<String> stringsList;
     private List<String> allAttacks = new ArrayList<>();
+    private LocalDateTime attacksParsingTime;
 
     @Override
     public List<Attack> getAllAttacks(AttacksString attacksString) {
@@ -50,7 +54,7 @@ public class ParsingServiceImpl implements ParsingService {
                                         getCoordinatesAttackedVillage(getAttackedVillageName()).x,
                                         getCoordinatesAttackedVillage(getAttackedVillageName()).y,
                                         new Player(0, getPlayerName(), null)),
-                                getAttackTime(i), 1));
+                                null, getAttackDuration(i), attacksParsingTime, 1));
         }
 
         return browsingService.injectAttackingAccountName(result);
@@ -61,7 +65,7 @@ public class ParsingServiceImpl implements ParsingService {
 
         String[] stringsArray = attacksString.getText().split("\n");
         stringsList = Arrays.asList(stringsArray);
-
+        attacksParsingTime = getServerTime();
         splitStringForAllAttacks();
     }
 
@@ -144,13 +148,21 @@ public class ParsingServiceImpl implements ParsingService {
         return new Coordinates(attackingVillageX, attackingVillageY);
     }
 
+    private LocalDateTime getServerTime(){
+        String[] time = stringsList.get(stringsList.size()-1).split(" ")[3].split(":");
+        return LocalDateTime.of(LocalDate.now(ZoneId.of("Europe/Moscow")),
+                LocalTime.of(Integer.parseInt(time[0]), Integer.parseInt(time[1]), Integer.parseInt(time[2])));
+    }
+
     private LocalTime getAttackDuration(int startParsingFrom){
         String[] durationArr = allAttacks.get(startParsingFrom + 3).split(" ")[1].split(":");
         return LocalTime.of(Integer.parseInt(durationArr[0]), Integer.parseInt(durationArr[1]), Integer.parseInt(durationArr[2]));
     }
 
     private LocalTime getAttackTime(int startParsingFrom){
-        String[] attackTime = allAttacks.get(startParsingFrom + 3).split(" ")[3].split(":");
-        return LocalTime.of(Integer.parseInt(attackTime[0]), Integer.parseInt(attackTime[1]), Integer.parseInt(attackTime[2]));
+        /*String[] attackTime = allAttacks.get(startParsingFrom + 3).split(" ")[3].split(":");
+        return LocalTime.of(Integer.parseInt(attackTime[0]), Integer.parseInt(attackTime[1]), Integer.parseInt(attackTime[2]));*/
+        String[] durationArr = allAttacks.get(startParsingFrom + 3).split(" ")[1].split(":");
+        return null;
     }
 }

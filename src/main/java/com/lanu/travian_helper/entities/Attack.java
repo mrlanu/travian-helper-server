@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 
@@ -26,7 +27,11 @@ public class Attack {
     @OneToOne
     private Village deffer;
 
-    private LocalTime time;
+    private LocalDateTime time;
+
+    private LocalTime duration;
+
+    private LocalDateTime parsingTime;
 
     private Integer userId;
 

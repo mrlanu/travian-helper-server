@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface AttackService {
     List<Attack> saveAll(List<Attack> requestedAttacksList);
+    void clean();
 }

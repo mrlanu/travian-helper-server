@@ -27,7 +27,7 @@ public class Attack {
     @OneToOne
     private Village deffer;
 
-    private LocalDateTime time;
+    private LocalDateTime timeAttack;
 
     private LocalTime duration;
 
@@ -42,11 +42,11 @@ public class Attack {
         Attack attack = (Attack) o;
         return Objects.equals(offer.getName(), attack.offer.getName()) &&
                 Objects.equals(deffer.getName(), attack.deffer.getName()) &&
-                Objects.equals(time, attack.time);
+                Objects.equals(timeAttack, attack.timeAttack);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(offer, deffer, time);
+        return Objects.hash(offer, deffer, timeAttack);
     }
 }

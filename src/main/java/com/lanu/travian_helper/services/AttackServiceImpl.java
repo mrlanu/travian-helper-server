@@ -7,6 +7,8 @@ import com.lanu.travian_helper.repositories.VillageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,7 +42,6 @@ public class AttackServiceImpl implements AttackService {
 
     // checking whether is attack stored already or not
     private List<Attack> checkIfAttackIsStored(List<Attack> requestedAttacksList){
-
         // if attack has been stored already, it going to be skipped
         boolean isExist = false;
 
@@ -62,5 +63,16 @@ public class AttackServiceImpl implements AttackService {
         } else result.addAll(requestedAttacksList);
 
         return result;
+    }
+
+    // delete all expired attacks
+    @Override
+    public void clean() {
+        LocalDateTime serverTime = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
+        List<Attack> expiredAttacksList = attackRepository
+                .findAllByTimeAttackLessThan(serverTime);
+        if (expiredAttacksList.size() > 0){
+            attackRepository.deleteAll(expiredAttacksList);
+        }
     }
 }

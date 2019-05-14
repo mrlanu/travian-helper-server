@@ -43,18 +43,20 @@ public class ParsingServiceImpl implements ParsingService {
             result.add(new Attack(
                                 null,
                                 // Offer
-                                new Village(0,
-                                    getAttackingVillageName(i),
-                                    getCoordinatesAttackingVillage(i).x,
-                                    getCoordinatesAttackingVillage(i).y,
-                                    new Player(0, getPlayerName(), null)),
+                                new Village(
+                                        0,
+                                        getAttackingVillageName(i),
+                                        getCoordinatesAttackingVillage(i).x,
+                                        getCoordinatesAttackingVillage(i).y,
+                                        new Player(0, getPlayerName(), null)),
                                 // Deffer
-                                new Village(0,
+                                new Village(
+                                        0,
                                         getAttackedVillageName(),
                                         getCoordinatesAttackedVillage(getAttackedVillageName()).x,
                                         getCoordinatesAttackedVillage(getAttackedVillageName()).y,
                                         new Player(0, getPlayerName(), null)),
-                                null, getAttackDuration(i), attacksParsingTime, 1));
+                                        getAttackTime(i), getAttackDuration(i), attacksParsingTime, 1));
         }
 
         return browsingService.injectAttackingAccountName(result);
@@ -159,10 +161,11 @@ public class ParsingServiceImpl implements ParsingService {
         return LocalTime.of(Integer.parseInt(durationArr[0]), Integer.parseInt(durationArr[1]), Integer.parseInt(durationArr[2]));
     }
 
-    private LocalTime getAttackTime(int startParsingFrom){
-        /*String[] attackTime = allAttacks.get(startParsingFrom + 3).split(" ")[3].split(":");
-        return LocalTime.of(Integer.parseInt(attackTime[0]), Integer.parseInt(attackTime[1]), Integer.parseInt(attackTime[2]));*/
-        String[] durationArr = allAttacks.get(startParsingFrom + 3).split(" ")[1].split(":");
-        return null;
+    private LocalDateTime getAttackTime(int startParsingFrom){
+        LocalTime duration = getAttackDuration(startParsingFrom);
+        return attacksParsingTime
+                .plusHours(duration.getHour())
+                .plusMinutes(duration.getMinute())
+                .plusSeconds(duration.getSecond());
     }
 }

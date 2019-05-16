@@ -2,6 +2,7 @@ package com.lanu.travian_helper.controllers;
 
 import com.lanu.travian_helper.entities.Account;
 import com.lanu.travian_helper.entities.Attack;
+import com.lanu.travian_helper.entities.Village;
 import com.lanu.travian_helper.models.AttacksString;
 import com.lanu.travian_helper.services.AttackService;
 import com.lanu.travian_helper.services.BrowsingService;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class MainController {
@@ -28,6 +30,11 @@ public class MainController {
 
     @Autowired
     private AttackService attackService;
+
+    @GetMapping("/testik")
+    public Map<Village, List<Map<Village, List<Attack>>>> testik(){
+        return attackService.crossAttacksTable();
+    }
 
     @GetMapping("/time")
     public LocalDateTime getServerTime(){

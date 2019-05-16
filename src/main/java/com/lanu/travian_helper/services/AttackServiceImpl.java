@@ -1,6 +1,7 @@
 package com.lanu.travian_helper.services;
 
 import com.lanu.travian_helper.entities.Attack;
+import com.lanu.travian_helper.entities.Village;
 import com.lanu.travian_helper.repositories.AttackRepository;
 import com.lanu.travian_helper.repositories.PlayerRepository;
 import com.lanu.travian_helper.repositories.VillageRepository;
@@ -9,8 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +28,7 @@ public class AttackServiceImpl implements AttackService {
     @Override
     public List<Attack> saveAll(List<Attack> requestedAttacksList){
 
-        return checkIfAttackIsStored(requestedAttacksList)
+        /*return checkIfAttackIsStored(requestedAttacksList)
                 .stream()
                 .peek(attack -> {
                     playerRepository.save(attack.getDeffer().getPlayer());
@@ -37,7 +37,9 @@ public class AttackServiceImpl implements AttackService {
                     villageRepository.save(attack.getDeffer());
                     attackRepository.save(attack);
                 })
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
+        crossAttacksTable();
+        return null;
     }
 
     // checking whether is attack stored already or not
@@ -61,6 +63,35 @@ public class AttackServiceImpl implements AttackService {
                 isExist = false;
             }
         } else result.addAll(requestedAttacksList);
+
+        return result;
+    }
+
+    @Override
+    public Map<Village, List<Map<Village, List<Attack>>>> crossAttacksTable() {
+
+        Map<Village, List<Map<Village, List<Attack>>>> result = new LinkedHashMap<>();
+
+        List<Attack> attackList = attackRepository.findAll();
+
+        Map<Village, List<Attack>> defferAttacksMap = attackList
+                .stream()
+                .collect(Collectors.groupingBy(Attack::getDeffer));
+
+
+        Map<Village, Map<Village, List<Attack>>> offerAttacksMap = attackList
+                .stream()
+                .collect(Collectors.groupingBy(Attack::getOffer,
+                        Collectors.groupingBy(Attack::getDeffer)));
+
+        defferAttacksMap.forEach((deffV, attacks) -> {
+            result.put(deffV, new ArrayList<>());
+            offerAttacksMap.forEach((offV, deffListMap) -> {
+                List<Map<Village, List<Attack>>> list = result.get(deffV);
+                list.add(new LinkedHashMap<>());
+                list.get(list.size() - 1).put(offV, offerAttacksMap.get(offV).getOrDefault(deffV, new ArrayList<>()));
+            });
+        });
 
         return result;
     }

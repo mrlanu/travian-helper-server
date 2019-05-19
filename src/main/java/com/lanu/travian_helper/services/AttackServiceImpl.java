@@ -2,6 +2,8 @@ package com.lanu.travian_helper.services;
 
 import com.lanu.travian_helper.entities.Attack;
 import com.lanu.travian_helper.entities.Village;
+import com.lanu.travian_helper.models.CrossAttack;
+import com.lanu.travian_helper.models.OfferAttack;
 import com.lanu.travian_helper.repositories.AttackRepository;
 import com.lanu.travian_helper.repositories.PlayerRepository;
 import com.lanu.travian_helper.repositories.VillageRepository;
@@ -28,7 +30,7 @@ public class AttackServiceImpl implements AttackService {
     @Override
     public List<Attack> saveAll(List<Attack> requestedAttacksList){
 
-        /*return checkIfAttackIsStored(requestedAttacksList)
+        return checkIfAttackIsStored(requestedAttacksList)
                 .stream()
                 .peek(attack -> {
                     playerRepository.save(attack.getDeffer().getPlayer());
@@ -37,9 +39,7 @@ public class AttackServiceImpl implements AttackService {
                     villageRepository.save(attack.getDeffer());
                     attackRepository.save(attack);
                 })
-                .collect(Collectors.toList());*/
-        crossAttacksTable();
-        return null;
+                .collect(Collectors.toList());
     }
 
     // checking whether is attack stored already or not
@@ -68,6 +68,44 @@ public class AttackServiceImpl implements AttackService {
     }
 
     @Override
+    public List<CrossAttack> getCrossAttacks() {
+        List<CrossAttack> result = new ArrayList<>();
+
+        List<Attack> attackList = attackRepository.findAll();
+
+        Map<Village, List<Attack>> defferAttacksMap = attackList
+                .stream()
+                .collect(Collectors.groupingBy(Attack::getDeffer));
+
+
+        Map<Village, Map<Village, List<Attack>>> offerAttacksMap = attackList
+                .stream()
+                .collect(Collectors.groupingBy(Attack::getOffer,
+                        Collectors.groupingBy(Attack::getDeffer)));
+
+        defferAttacksMap.forEach((defV, attacks) -> {
+            CrossAttack crossAttack = new CrossAttack(defV, new ArrayList<>());
+            offerAttacksMap.forEach((offV, defListMap) ->
+                    crossAttack.getOfferAttacks().add(new OfferAttack(offV, defListMap.getOrDefault(defV, null))));
+            result.add(crossAttack);
+        });
+
+        return result;
+    }
+
+    // delete all expired attacks
+    @Override
+    public void clean() {
+        LocalDateTime serverTime = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
+        List<Attack> expiredAttacksList = attackRepository
+                .findAllByTimeAttackLessThan(serverTime);
+        if (expiredAttacksList.size() > 0){
+            attackRepository.deleteAll(expiredAttacksList);
+        }
+    }
+
+    // implemented via Maps
+    /*@Override
     public Map<Village, List<Map<Village, List<Attack>>>> crossAttacksTable() {
 
         Map<Village, List<Map<Village, List<Attack>>>> result = new LinkedHashMap<>();
@@ -94,16 +132,5 @@ public class AttackServiceImpl implements AttackService {
         });
 
         return result;
-    }
-
-    // delete all expired attacks
-    @Override
-    public void clean() {
-        LocalDateTime serverTime = LocalDateTime.now(ZoneId.of("Europe/Moscow"));
-        List<Attack> expiredAttacksList = attackRepository
-                .findAllByTimeAttackLessThan(serverTime);
-        if (expiredAttacksList.size() > 0){
-            attackRepository.deleteAll(expiredAttacksList);
-        }
-    }
+    }*/
 }

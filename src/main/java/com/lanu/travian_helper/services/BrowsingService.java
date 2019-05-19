@@ -4,7 +4,6 @@ import com.lanu.travian_helper.entities.Account;
 import com.lanu.travian_helper.entities.Attack;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 public interface BrowsingService {

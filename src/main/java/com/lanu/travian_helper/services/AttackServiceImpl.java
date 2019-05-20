@@ -71,7 +71,10 @@ public class AttackServiceImpl implements AttackService {
     public List<CrossAttack> getCrossAttacks() {
         List<CrossAttack> result = new ArrayList<>();
 
-        List<Attack> attackList = attackRepository.findAll();
+        List<Attack> attackList = attackRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparing(Attack::getTimeAttack))
+                .collect(Collectors.toList());
 
         Map<Village, List<Attack>> defferAttacksMap = attackList
                 .stream()
